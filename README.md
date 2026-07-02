@@ -1,4 +1,4 @@
-# Full GLM-5.2 + DSpark speculator (RedHat AI) on a 4× DGX Spark / GB10 cluster
+# vLLm 0.23.1rc1 - GLM-5.2 Quantrio INT4/INT8 mixed + DSpark speculator (RedHat AI) on a 4× DGX Spark / GB10 cluster
 
 **First known serve of GLM-5.2 with the upstream vLLM DSpark speculative-decoding
 stack (PRs [#46995](https://github.com/vllm-project/vllm/pull/46995) +

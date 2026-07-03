@@ -35,6 +35,23 @@ enough waste that DSpark currently lands **below** this cluster's MTP k=3 baseli
 2. `num_speculative_tokens` 7 → 3–4 to cut draft waste at low acceptance.
 3. Epoch-2/3 checkpoints (RedHat is publishing per-epoch revisions) — drop-in swaps.
 
+## Update 2026-07-03: k-tuning, NVFP4-KV composition, and the MTP shootout
+
+Optimization pass applying the DSV4F-repo levers (k-tuning, NVFP4 KV, concurrency):
+
+| QuantTrio GLM-5.2, TP=4 | Single | C2 | C4 | C6 | accept len |
+|---|---|---|---|---|---|
+| DSpark k=7, fp8 KV, 32K | 11.3-12.4 | 15.9 | - | - | 2.16 |
+| DSpark k=3, fp8 KV, 32K | 12.4-13.5 | 20.2 | - | - | ~2.0 |
+| DSpark k=3, **NVFP4 KV, 64K** | ~13 | - | 24.5 | 32.5 | 1.9-2.2 |
+| **MTP k=3, NVFP4 KV, 64K (standing)** | **14.1-15.0** | - | **28.4** | **38.0** | **2.33** |
+
+Image `vllm-glm52-cuda130:dspark-nvfp4` (this repo + the January NVFP4-KV mod) serves both
+speculators via one env switch. Concurrent-correctness verified (C4 greedy determinism).
+DSpark becomes the winner when draft acceptance on the quantized target improves:
+epoch-2/3 checkpoints (drop-in) or a QuantTrio-native retrain (speculators online recipe,
+~1 day on 8 cloud GPUs, or 2-3 days with this cluster serving + 1 rented trainer GPU).
+
 ## The build
 
 `vllm-glm52-cuda130:dspark` = the [January full-GLM-5.2 image]
